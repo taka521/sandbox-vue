@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>chapter2</title>
+        <link href="main.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="app">
+            <!-- テキストのデータバインディング -->
+            <!-- {{ }} は マスタッシュ記法 -->
+            <!-- マスタッシュ記法で書けるのは式であり、文は書けない -->
+            <p>{{ message.value }}</p>
+            <p>{{ message.value.length }}</p>
+            <p>{{ list[2] }}</p>
+            <p>{{ list[num] }}</p>
+
+            <!-- 属性のデータバインディング -->
+            <!--
+                マスタッシュ記法はテキストコンテンツの記法であり、属性に対して使用することはできない。
+                    <input type="text" value="{{ message }}" />  <= これはエラー 
+                属性へのバインドは「v-bind」ディレクティブを使用する。
+            -->
+            <input type="text" v-bind:value="message2" />
+            <input type="text"       :value="message2" /> <!-- v-bindは省略できる-->
+            <!-- 
+                v-bindの修飾子
+                  .prop  : DOMプロパティとしてバインドする。
+                  .camel : ケバブケースの属性名をキャメルケースに変換する
+                  .sync  : 双方向バインディングを行う
+            -->
+            <div v-bind:text-content..prop="message2"></div>
+            <div v-bind:scroll-top.prop="scroll"></div>
+
+            <!-- 以下のように記述すると、現在のデータの状態をJSON形式で表示することができる -->
+            <!-- <pre>{{ $data }}</pre> -->
+
+            <!-- メソッド呼び出し -->
+            <p>{{ count }}回クリックしました。</p>
+            <button v-on:click="increment">カウンタを増やす</button>
+
+            <!-- クラスとスタイルへのデータバインド -->
+            <!--
+                クラスとスタイルへのデータバインディングを行うと、
+                クラス名やCSSプロパティ名としてバインドされる。
+                スタイルのプロパティ名はキャメルケースで書くことができ、
+                クラス名の場合はクラス名に「-」を含む場合、「’’」で囲んであげる必要がある。
+                =>クラス名は一律''で囲ったほうがいいかも。
+            -->
+            <p v-bind:class="{child: isChaild, 'is-active': isActive}">Text</p>
+            <p v-bind:style="{color: textColor, backgroundColor: bgColor}">Text</p>
+
+            <!-- また、オブジェクトを渡すことができる -->
+            <p v-bind:class="classObject">Text</p>
+
+            <!-- テンプレートの条件分岐 -->
+            <!--
+                テンプレートの条件分岐には
+                ・v-ifディレクティブ
+                ・v-showディレクティブ
+                を用いる。
+                違いとしては、
+                ・v-if   : 条件が偽の場合、コメント化される。DOM上からも削除される。
+                ・v-show : 条件が偽の場合、スタイルが付与されて非表示になる。DOM上には存在している。
+            -->
+            <div v-if="ok">v-ifによる条件分岐</div>
+            <div v-show="ok">v-showによる条件分岐</div>
+            <!-- templateタグでグルーピングすることも可能 -->
+            <template v-if="ok">
+                <p>Hoge!</p>
+                <p>Fuga!!</p>
+            </template>
+
+            <!-- リストデータの表示 -->
+            <!--
+                リストデータの表示には「v-for」ディレクティブを使用する。
+                    v-for="item in items"
+                基本的には上記のような形式で書けるが、リストのデータが変更された場合に効率よくレンダリングするたに、
+                1つの要素に1つのユニークなキーを設定することが推奨されている。
+            -->
+            <ol>
+                <li v-for="(item, index) in items" 
+                    v-bind:key="item.id"
+                    v-bind:class="{ tuyoi: item.hp > 300 }">
+                    ID.{{ item.id }} {{ item.name }} HP.{{ item.hp }}
+                    <span v-if="item.hp > 300">つよい！</span>
+                    <span v-if="item.hp < 50">瀕死！</span>
+                    <button v-on:click="doRemove(index)">削除</button>
+                    <button v-on:click="doAttack(index)">攻撃</button>
+                </li>
+            </ol>
+            <div>
+                名前：<input v-model="name">
+                <button v-on:click="doAdd">モンスターを追加</button>
+            </div>
+
+            <ul>
+                <li v-for="(item, index) in list" :key="item.id">
+                    ID.{{item.id}} {{item.name}}
+                </li>
+            </ul>
+        </div>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>
