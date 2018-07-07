@@ -1,0 +1,9 @@
+@charset 'utf-8';
+
+.v-enter-active, .v-leave-action {
+    transition: opacity 1s;
+}
+
+.v-enter, .v-leave-to {
+    opacity: 0;
+}
