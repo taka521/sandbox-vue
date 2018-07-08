@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>chapter3</title>
+        <link href="main.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="app">
+        <!-- ==== イベントハンドリング ============================== -->
+
+            <!-- メソッドイベントハンドラ -->
+            <button v-on:click="clickHandler">メソッドハンドラ</button> <!-- クリックされました！ -->
+
+            <!-- インラインイベントハンドラ -->
+            <button v-on:click="count++">インラインハンドラ</button>
+            <p>{{ count }}</p> <!-- クリックするたびに、数値が上がってく -->
+
+            <!-- インラインメソッドハンドラの式では、元のイベントオブジェクトを「$event」という変数で受け取る事が可能 -->
+            <button v-on:click="eventHandler($event)">イベントハンドラ</button> <!-- [object MouseEvent] -->
+
+            <!--
+                使用できるDOMイベントは、ブラウザがサポートしていれば何でもOK。
+            -->
+            <div>
+                <!-- 画像の読み込みが完了したら、ゆっくり表示さる -->
+                <img v-on:load="show=true" v-bind:class="{hide: !show}" src="https://www.pakutaso.com/shared/img/thumb/neko1869IMG_9133_TP_V.jpg" width="20%">
+            </div>
+
+        <!-- =================================================== -->
+
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>

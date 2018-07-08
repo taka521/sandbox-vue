@@ -1,0 +1,10 @@
+@charset "utf-8";
+
+img {
+    opacity: 1;
+    transition: opacity 2s;
+}
+
+img.hide {
+    opacity: 0;
+}
