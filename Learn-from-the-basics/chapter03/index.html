@@ -27,6 +27,71 @@
                 <img v-on:load="show=true" v-bind:class="{hide: !show}" src="https://www.pakutaso.com/shared/img/thumb/neko1869IMG_9133_TP_V.jpg" width="20%">
             </div>
 
+            <!--
+                イベント修飾 : イベント修飾は、DOMイベントの振る舞いを変更する修飾子。
+            -->
+
+            <!-- .stop ： イベントのバブリングを停止させる -->
+            <!-- 
+                同じイベントをハンドルしたDOMがネストされている場合は、内から外（子から親）に向かってバブリングする。
+                    バブリング：ターゲットを内包している要素のイベントが、連鎖的に実行されること
+                しかし、.stop修飾子を用いることでバブリングを制御できる。
+            -->
+            <h3>.stop</h3>
+            <div v-on:click="handle('div1')">
+                div1
+                <div v-on:click="handle('div2')">div2</div> <!-- div2 div1 の順でコンソールに表示される -->
+                <div v-on:click.stop="handle('div3')">div3</div> <!-- div3 だけがコンソールに表示される -->
+            </div>
+
+            <!--.prevent : もとの処理をキャンセルする -->
+            <h3>.prevent</h3>
+            <div v-on:click.right="handle">右クリックしてみて</div> <!-- 右クリックしたときにのみ、コンソールにマウスイベントを表示 -->
+            <div v-on:click.right.prevent="handle">右クリックしてみて</div> <!-- 右クリックしたときにのみ、コンソールにマウスイベントを表示。ただし、コンテキストメニューは表示させない。 -->
+
+            <!-- .capture : キャプチャーボードでイベントを発火させる -->
+            <!--
+                .capture修飾すると、ルート要素からイベントターゲット要素までのDOMツリーを探すときにイベントが発生する。
+                以下は、div3をクリックするとコンソールに
+                    div1
+                    div3
+                    div2
+                と表示される。
+                div2よりdiv3が先に表示されているのは、div2はバブリングによるもの。
+                    => div2を先に表示させたい場合には、div2を.capture修飾すればいい。
+                つまり、キャプチャーモードのイベントはバブリングモードのイベントよりも先に発火する。
+            -->
+            <h3>.capture</h3>
+            <div v-on:click.capture="handle('div1')">
+                div1
+                <div v-on:click="handle('div2')">
+                    div2
+                    <div v-on:click="handle('div3')">div3</div>
+                </div>
+            </div>
+
+            <!-- .self : event.target要素が自分自身の場合のみイベントを発火する -->
+            <h3>.self</h3>
+            <div v-on:click.self="handle('div1')">div1</div>
+            <!-- モーダルウィンドウの背景部分をクリックして閉じるなどに使用するらしい -->
+
+            <!-- .native : コンポーネントのイベントハンドリングを行う -->
+            <!--
+                コンポーネントのイベントハンドリングは、$emitを使用しなければ呼び出されない。
+                そのため、直摂イベントを発火させたい場合には .native 修飾する。
+                    => 詳しくはコンポーネントについて学ぶときに
+            -->
+            <h3>.native</h3>
+            <my-component v-on:click="handle('my-component')">my-component</my-component>　<!-- イベントは発火されない -->
+            <my-component v-on:click.native="handle('my-component')">my-component</my-component> <!-- イベントが発火される -->
+
+            <!-- .passive : event.preventDefault()を呼び出さない -->
+            <!--
+                .preventとの併用はできない。
+            -->
+            <h3>.passive</h3>
+            <div v-on:click.right.passive="handle('div1')">div1</div>
+
         <!-- =================================================== -->
 
         </div>

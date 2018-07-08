@@ -10,6 +10,9 @@ var app = new Vue({
         },
         eventHandler: function(event) {
             alert(event)
+        },
+        handle: function(comment) {
+            console.log(comment)
         }
     }
 })
