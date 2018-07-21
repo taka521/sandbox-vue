@@ -123,6 +123,106 @@
             <!-- Shiftキーを押しながらクリックすると、ハンドラが呼ばれる -->
             <button v-on:click.shift="handle">Shiftを押しながらクリック</button>
 
+        <!-- =================================================== -->
+
+        <!-- ==== 双方向データバインディング ======================= -->
+            <!--
+                双方向データバインディングを行うためには、v-modelディレクティブを使用する。
+                v-modelディレクティブの値に、入力値と同期させたいデータを指定する。
+            -->
+            <h3>双方向データバインディング：v-model</h3>
+            <div>
+                <input v-model="message">
+                <p>{{ message }}</p>
+            </div>
+            <!--
+                v-modelディレクティブは、次の2つの処理をひとつにまとめたもの。
+                ・データバインディングで、要素のvalue属性を更新する。
+                    => リアクティブデータをDOM要素にデータバインドし、データの変更を検出する度に、紐付いているDOM要素を自動的に更新する。
+                ・イベントハンドリングで、受け取った値をデータに代入する。
+                    => ユーザからの何らかのイベント（入力する,etc）がトリガとなって、データを取得する。
+
+                また、v-modelを使用した場合は属性の値は無視される。
+                例えばラジオボタンやリストボックスで、checked や selected が付いていても無視されてしまう。
+                  => 値や選択されているものは、常にバインドしたデータと同期する。
+            -->
+            <!-- v-modelで受け取るデータ型 -->
+
+            <!-- 複数行テキスト : 常に文字列型 -->
+            <textarea v-model="message"></textarea>
+            <pre>{{ message }}</pre>
+
+            <!-- チェックボックス（単一要素） : デフォルト値はBoolean -->
+            <label>
+                <input type="checkbox" v-model="val"> {{ val }}
+            </label>
+            <!-- 値を設定したい場合には、true-value と false-value に値を指定する。 -->
+            <label>
+                <input type="checkbox" v-model="val2" true-value="yes" false-value="no"> {{ val2 }}
+            </label>
+
+            <!-- チェックボックス（複数要素）： 配列 -->
+            <div>
+                <label><input type="checkbox" v-model="val3" value="A"> A</label>
+                <label><input type="checkbox" v-model="val3" value="B"> B</label>
+                <label><input type="checkbox" v-model="val3" value="C"> C</label>
+                <p>{{ val3 }}</p>
+            </div>
+
+            <!-- ラジオボタン：文字列 -->
+            <div>
+                <label><input type="radio" value="a" v-model="val4"> A</label>
+                <label><input type="radio" value="b" v-model="val4"> B</label>
+                <label><input type="radio" value="c" v-model="val4"> C</label>
+                <p>{{ val4 }}</p>
+            </div>
+
+            <!-- セレクトボックス（単一）：文字列 -->
+            <div>
+                <select v-model="val5">
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                </select>
+                <p>{{ val5 }}</p>
+            </div>
+
+            <!-- セレクトボックス（複数）：配列  -->
+            <div>
+                <select v-model="val6" multiple>
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                </select>
+                <p>{{ val6 }}</p>
+            </div>
+
+            <!-- 画像ファイル：v-modelは使用できない -->
+            <!-- 代わりに、v-onでchangeイベントをハンドルする。 -->
+            <div>
+                <input type="file" v-on:change="handleChange">
+                <div v-if="preview"><img v-bind:src="preview"></div>
+            </div>
+
+            <!-- 
+                修飾子
+                  .lazy   - inputの代わりに、changeイベントをハンドルする。
+                  .number - 値を数値に変換する。
+                  .trim   - 値の余分なスペースを削除する。
+             -->
+            <div>
+                <p>
+                    "002" って入力すると、 "2"って出力される<br>
+                    <input type="text" v-model.number="price">{{ price }}
+                </p>
+            </div>
+
+            <!--
+                マウント要素外のイベント操作
+            -->
+            <header v-bind:class="{compact: scrollY > 200}">
+                200pxよりも下にスクロールしたら .compact を付与
+            </header>
 
         <!-- =================================================== -->
 
