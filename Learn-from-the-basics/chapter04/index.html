@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>chapter</title>
+        <link href="main.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="app">
+            <h2>算出プロパティ</h2>
+            <p>
+                任意に処理を含めることのできるデータ。<br/>
+                ディレクティブの値には式を埋め込むことができるが、やたらに式を書き込むと、テンプレートの見通しが悪くなる。<br/>
+                式を算出プロパティに置き換えることで、テンプレートの見通しを良くすることができる。<br/>
+                <br/>
+                算出プロパティは関数として定義するが、テンプレート側ではプロパティとして使用できる。
+            </p>
+
+            <hr>
+
+            <h3>算出プロパティの使用方法</h3>
+            <p>{{ width }}の半分は{{ halfWidth }}</p>
+
+            <h3>算出プロパティの組み合わせ</h3>
+            <p>算出プロパティを使用して、更に別の算出プロパティを定義することも可能。</p>
+            <P>X: {{ halfPoint.x }}</P>
+            <p>Y: {{ halfPoint.y }}</p>
+
+            <hr>
+
+            <h3>ゲッターとセッター</h3>
+            <p>
+                算出プロパティは基本的に元のデータには影響を与えない。<br/>
+                そのため、算出プロパティに値を代入するとエラーが発生する。<br/>
+                ただ、必要ならセッターも提供されているので入力への対応も可能。
+            </p>
+            <div>
+                <p><input v-model.number="width"> witdh: {{ width }}</p>
+                <p><input v-model.number="halfWidth"> halfWidth: {{ halfWidth }}</p>
+            </div>
+
+            <hr>
+
+            <h3>算出プロパティのキャッシュ機能</h3>
+            <p>
+                算出プロパティとメソッドの違いとしては、算出プロパティはリアクティブな依存データに基づいて、結果をキャッシュする。<br/>
+                キャッシュを再構築するトリガとなるのは、リアクティブなデータのみである。（要は、データが流れてこないとキャッシュされない）<br/>
+            </p>
+            <p>算出プロパティ</p>
+            <ol>
+                <li>{{ computedData }}</li>
+                <li>{{ computedData }}</li>
+            </ol>
+            <p>メソッド</p>
+            <ol>
+                <li>{{ methodsData() }}</li>
+                <li>{{ methodsData() }}</li>
+            </ol>
+
+            <hr>
+
+            <h3>リストの絞り込みに算出プロパティを利用する</h3>
+            <p>
+                キャッシュ機能により、算出プロパティは元のデータに変更があるまで何度使用しても、関数内の処理は１度しか行われない。<br/>
+                そのため、複雑な処理に向いている（らしい）。
+            </p>
+            <div>
+                <input v-model.number="bugget"> 円以下に絞り込む
+                <input v-model.number="limit">件を表示
+                <p>{{ matched.length }} 件中 {{ limited.length }} 件を表示</p>
+                <p><button v-on:click="order = !order">sort</button></p>
+                <ul>
+                    <li v-for="(item, index) in limited" :key="item.id">
+                        {{ item.name }} {{ item.price }}円
+                    </li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <h3>ウォッチャ</h3>
+            <p>
+                「ウォッチャ」とは特定の算出プロパティの状態を監視し、変化があったときに登録した処理を自動的に実行する機能。<br>
+                また、ウォッチャがデータを返すことはない。（あくまで、処理のみ）
+            </p>
+            <h4>ウォッチャのオプション</h4>
+            <p>
+                ウォッチャの定義ではオプションを任意で設定可能。<br>
+                オプションは以下の通り。（値はBoolean）<br>
+                ・depp : ネストされたオブジェクトも監視対象とする。<br>
+                ・immediate : 初期読み込み時にもハンドラを呼び出す。<br>
+                オプションを使用する場合、以下のように<code>handler</code>プロパティにハンドラを定義する。
+            </p>
+            <pre><code>
+                watch: {
+                    list: {
+                        handler: function(newValue, oldValue) {
+                            // listが変化した場合の処理
+                        }
+                    },
+                    deep: true,
+                    immediate: true
+                }
+            </code></pre>
+
+            <h4>インスタンスメソッドでの登録</h4>
+            <p>
+                インスタンスメソッド<code>this.$watch</code>を使用することで、各メソッド内でウォッチャを登録できる。
+            </p>
+            <pre><code>
+                created: function() {
+                    this.$watch('value', function(newValue, oldValue){
+                        // ...
+                    })
+                }
+            </code></pre>
+            <p>インスタンスメソッドでウォッチャを登録する場合は、次の情報を引数に渡す必要がある</p>
+            <ol>
+                <li>監視するデータ名</li>
+                <li>ハンドラ</li>
+                <li>オプションオブジェクト（任意）</li>
+            </ol>
+
+            <hr>
+            <h3>GitHubからリポジトリ一覧を取得する</h3>
+            <select v-model="current">
+                <option v-for="topic in topics" v-bind:value="topic.value">{{ topic.name }}</option>
+            </select>
+            <div v-for="item in list">{{ item.full_name }}</div>
+
+            <hr>
+            <h3>フィルタでテキストの変換処理を行う</h3>
+            <p>
+                フィルタは、「文字数を丸める」「数字にカンマを入れる」といったテキストベースの変換処理に特化した機能。<br>
+                フィルタはローカル、もしくはグルーバルに登録して利用できるが、ローカルに登録した場合でも <code>this</code> へのアクセスは不可能。<br>
+                使い方としては、マスタッシュ記法もしくは<code>v-bind</code>ディレクティブの値にパイプ「<code>|</code>」でフィルタ名をつなげる。
+            </p>
+            <pre><code>
+                ｛｛ 対象データ | フィルタ名 ｝｝
+                ＜div v-bind:id="対象データ | フィルタ名">＜/div＞
+            </code></pre>
+
+            <h4>ローカルへの登録</h4>
+            <p>コンポーネントの<code>filters</code>オプションに登録することで、特定のコンポーネント内でのみ使用可能となる</p>
+            <pre>
+                <code>
+                    var app = new Vue({
+                        el: "#app",
+                        data: {
+                            price: 198000
+                        }
+                        filters: {
+                            localeNum: function(val) {
+                                return val.toLocaleString()
+                            }
+                        }
+                    }
+                </code>
+            </pre>
+            <div>
+                <p>フィルタ未適用: {{ price }}</p>
+                <p>フィルタ適用: {{ price | localeNum }}</p>
+            </div>
+
+            <h4>グローバルへの登録</h4>
+            <p>汎用的なフィルタであれば<code>Vue.filter</code>メソッドを使って、フィルタを登録することで、全てのコンポーネントから使用できる。</p>
+            <pre><code>
+                Vue.filter('localeNum', function(val){ return val.toLocaleString() })
+            </code></pre>
+
+            
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>
