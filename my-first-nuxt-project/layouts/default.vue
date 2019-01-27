@@ -1,12 +1,19 @@
 <template>
   <div>
+    <span>default layout</span>
+    <AppNavigation/>
+    <hr>
     <nuxt/>
+    <footer>
+      footer
+    </footer>
   </div>
 </template>
 
 <style>
 html {
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -16,7 +23,9 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
   margin: 0;
 }
@@ -51,3 +60,11 @@ html {
 }
 </style>
 
+<script>
+import AppNavigation from "~/components/AppNavigation";
+export default {
+  components: {
+    AppNavigation
+  }
+};
+</script>
