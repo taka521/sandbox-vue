@@ -23,6 +23,11 @@ module.exports = {
         href:
           'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
       }
+    ],
+    script: [
+      {
+        src: 'https://cdn.jsdelivr.net/npm/bubbly-bg@1.0.0/dist/bubbly-bg.js'
+      }
     ]
   },
 

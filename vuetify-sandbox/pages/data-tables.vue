@@ -28,6 +28,7 @@
       </template>
     </v-data-table>
 
+    <br/>
     <h3>カスタムフィルタ</h3>
     <v-flex>
       <v-select :items="headers" label="Standard" v-model="selectFeald"></v-select>
